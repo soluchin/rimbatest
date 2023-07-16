@@ -1,0 +1,21 @@
+package com.rimba.technicaltest.Entity;
+
+import java.sql.Date;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.Data;
+
+@Entity
+@Data
+public class Transaction {
+    @Id @GeneratedValue
+    private Integer id;
+    private Integer customerId;
+    private String transactionCode;
+    private Date transactionDate;
+    private Double totalPrice;
+    private Double discount;
+    private Double finalPrice;
+}
