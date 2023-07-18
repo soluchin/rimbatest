@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rimba.technicaltest.Entity.Product;
 import com.rimba.technicaltest.Entity.Transaction;
 import com.rimba.technicaltest.Entity.TransactionItem;
 import com.rimba.technicaltest.Entity.Model.RequestModel.TransactionRequestModel;
 import com.rimba.technicaltest.Entity.Model.ResponseModel.TransactionResponseModel;
+import com.rimba.technicaltest.Exception.TransactionQtyMoreThanProductQtyException;
 import com.rimba.technicaltest.Repository.ProductRepo;
 import com.rimba.technicaltest.Repository.TransactionItemRepo;
 import com.rimba.technicaltest.Repository.TransactionRepo;
@@ -38,7 +40,8 @@ public class TransactionService implements ITransactionService{
     }
 
     @Override
-    public Boolean createTransaction(TransactionRequestModel model) {
+    @Transactional(rollbackFor=TransactionQtyMoreThanProductQtyException.class)
+    public Boolean createTransaction(TransactionRequestModel model) throws TransactionQtyMoreThanProductQtyException {
         
         Transaction t = _transactionRepo.save(model.getTransaction());
 
@@ -46,6 +49,9 @@ public class TransactionService implements ITransactionService{
         for (TransactionItem ti : model.getTransactionItem()){
             Product product = _productRepo.getOne(ti.getItemId());
 
+            if(product.getQty() - ti.getQty() < 0){
+                throw new TransactionQtyMoreThanProductQtyException("transaction qty more than product qty");
+            }
             //update qty
             product.setQty(product.getQty() - ti.getQty());
             _productRepo.save(product);
