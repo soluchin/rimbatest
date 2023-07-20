@@ -11,5 +11,6 @@ public class Customer {
     @Id @GeneratedValue
     private Integer id;
     private String name;
-    private Float discountRate;
+    private String discountType;
+    private Double discount;
 }

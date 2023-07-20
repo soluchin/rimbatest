@@ -49,7 +49,7 @@ public class ProductService implements IProductService{
 
     private void UpdateAll(List<Product> products){
         for (Product product : products) {
-            Product existProduct = _productRepo.getOne(product.getId());
+            Product existProduct = _productRepo.findById(product.getId()).get();
             existProduct.setName(product.getName());
             existProduct.setQty(product.getQty());
             existProduct.setQtyType(product.getQtyType());

@@ -15,6 +15,11 @@ public class CustomerService implements ICustomerService{
     private CustomerRepo _customerRepo;
 
     public Customer getById(Integer id) throws EntityNotFoundException{
-        return _customerRepo.getOne(id);
+        return _customerRepo.findById(id).get();
+    }
+
+    @Override
+    public Customer create(Customer customer) {
+        return _customerRepo.save(customer);
     }
 }

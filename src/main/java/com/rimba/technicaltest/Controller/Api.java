@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.rimba.technicaltest.Entity.Customer;
 import com.rimba.technicaltest.Entity.Product;
 import com.rimba.technicaltest.Entity.Transaction;
 import com.rimba.technicaltest.Entity.Model.RequestModel.ProductRequestModel;
 import com.rimba.technicaltest.Entity.Model.RequestModel.TransactionRequestModel;
 import com.rimba.technicaltest.Entity.Model.ResponseModel.TransactionResponseModel;
+import com.rimba.technicaltest.Exception.MyTransactionException;
 import com.rimba.technicaltest.Service.ICustomerService;
 import com.rimba.technicaltest.Service.IProductService;
 import com.rimba.technicaltest.Service.ITransactionService;
@@ -34,6 +35,12 @@ public class Api {
 
     @Autowired
     ITransactionService _transactionService;
+
+    @PostMapping("customer/create")
+    @ResponseBody
+    public Customer createCustomer(@RequestBody Customer customer){
+        return _customerService.create(customer);
+    }
 
     @GetMapping("products")
     @ResponseBody
@@ -66,9 +73,9 @@ public class Api {
 
     @PostMapping("transaction/create")
     @ResponseBody
-    public Boolean createTransaction(@RequestBody TransactionRequestModel model){
+    public Boolean createTransaction(@RequestBody TransactionRequestModel model) throws MyTransactionException{
+        _transactionService.createTransaction(model);
         try{
-            _transactionService.createTransaction(model);
             return true;
         }catch(Exception e){
             return false;

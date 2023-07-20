@@ -1,9 +1,10 @@
 package com.rimba.technicaltest.Entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ public class Transaction {
     @Id @GeneratedValue
     private Integer id;
     private Integer customerId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String transactionCode;
     private Date transactionDate;
     private Double totalPrice;
