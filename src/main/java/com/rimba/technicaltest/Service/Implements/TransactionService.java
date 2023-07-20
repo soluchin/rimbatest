@@ -1,5 +1,7 @@
 package com.rimba.technicaltest.Service.Implements;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +36,8 @@ public class TransactionService implements ITransactionService{
     @Autowired
     private CustomerRepo _customerRepo;
 
+    DateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+
     @Override
     public List<Transaction> getAllTransaction() {
         return _transactionRepo.findAll();
@@ -62,6 +66,7 @@ public class TransactionService implements ITransactionService{
         for (TransactionItem ti : model.getTransactionItems()){
             Product product = _productRepo.findById(ti.getItemId()).get();
             ti.setPrice(product.getPrice() * ti.getQty());
+            
             if(product.getQty() - ti.getQty() < 0){
                 throw new MyTransactionException("transaction qty more than product qty");
             }
@@ -86,6 +91,7 @@ public class TransactionService implements ITransactionService{
                 t.setDiscount(0d);
           }
         t.setFinalPrice(totalPrice - t.getDiscount());
+        t.setTransactionCode("TR"+t.getId()+formatter.format(t.getTransactionDate()));
 
         _transactionRepo.save(t);
         _transactionItemRepo.saveAll(model.getTransactionItems());

@@ -14,7 +14,6 @@ public class Transaction {
     @Id @GeneratedValue
     private Integer id;
     private Integer customerId;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String transactionCode;
     private Date transactionDate;
     private Double totalPrice;
